@@ -18,7 +18,10 @@ function setup() {
 function draw() {
     background(150);
 
+
     gridShow();
+    showTime();
+
 }
 
 function create2DArray() {
@@ -181,4 +184,30 @@ function gameOver() {
             grid[i][j].revealed = true;
         }
     }
+}
+
+function showTime() {
+    textSize(30);
+
+    var secFromFrames = floor(frameCount / 60);
+    var sec = secFromFrames % 60;
+    var min = floor(sec / 60);
+
+    if (min < 10) {
+        if (sec < 10) {
+            text("0" + min + " : " + "0" + sec, 400, 400);
+
+        } else {
+            text("0" + min + " : " + sec, 400, 400);
+        }
+    } else {
+        if (sec < 10) {
+            text(min + " : " + "0" + sec, 400, 400);
+        } else {
+            text(min + " : " + sec, 400, 400);
+        }
+    }
+
+    //text(min + " : " + sec, 400, 400);
+
 }

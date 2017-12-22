@@ -6,7 +6,7 @@ var w;
 
 
 function setup() {
-    createCanvas(500, 500);
+    createCanvas(900, 900);
 
     grid = create2DArray();
     w = width / sqPerLine;
@@ -39,7 +39,8 @@ function fillGrid() {
             var cell = {
                 mine: false,
                 revealed: false,
-                neighbours: 0
+                neighbours: 0,
+                flag: false
             };
 
             grid[i][j] = cell;
@@ -78,10 +79,17 @@ function gridShow() {
             if (grid[i][j].revealed == false) {
                 fill(190);
                 rect(i * w, j * w, w, w);
+                if (grid[i][j].flag) {
+                    strokeWeight(3);
+                    line(i * w + w / 4, j * w + w / 8, i * w + w / 4, j * w + w - w / 8);
+                    fill(255, 0, 0);
+                    rect(i * w + w / 4, j * w + w / 8, w / 2, w / 3);
+                    strokeWeight(2);
+                }
             } else if (grid[i][j].mine == true) {
                 fill(255);
                 rect(i * w, j * w, w, w);
-
+                // draw mine
                 fill(0);
                 ellipse(i * w + w / 2, j * w + w / 2, w - w / 4, w - w / 4);
             } else {
@@ -98,6 +106,7 @@ function gridShow() {
                 strokeWeight(1);
 
                 textAlign(CENTER);
+                textSize(w / 2);
                 text(grid[i][j].neighbours, i * w + w / 2, j * w + w / 2 + 4);
             }
         }
@@ -128,9 +137,20 @@ function mousePressed() {
     var col = floor(mouseX / w);
     var row = floor(mouseY / w);
 
-    grid[col][row].revealed = true;
-    if (grid[col][row].mine == false && grid[col][row].neighbours == 0) {
-        revealNeighbours(col, row);
+
+    if (mouseButton == LEFT) {
+        if (grid[col][row].mine) {
+            gameOver();
+        } else if (!grid[col][row].flag) {
+            grid[col][row].revealed = true;
+            if (grid[col][row].mine == false && grid[col][row].neighbours == 0) {
+                revealNeighbours(col, row);
+            }
+        }
+    }
+
+    if (mouseButton == RIGHT) {
+        grid[col][row].flag = !grid[col][row].flag;
     }
 }
 
@@ -141,13 +161,24 @@ function revealNeighbours(i, j) {
             if (i + x >= 0 && i + x < sqPerLine && j + y >= 0 && j + y < sqPerLine) {
                 if (!(x == 0 && y == 0)) {
                     if (grid[i + x][j + y].revealed == false) {
-                        grid[i + x][j + y].revealed = true;
-                        if (grid[i + x][j + y].neighbours == 0) {
-                            revealNeighbours(i + x, j + y);
+                        if (!grid[i + x][j + y].flag) {
+                            grid[i + x][j + y].revealed = true;
+                            if (grid[i + x][j + y].neighbours == 0) {
+                                revealNeighbours(i + x, j + y);
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+function gameOver() {
+
+    for (var i = 0; i < sqPerLine; i++) {
+        for (var j = 0; j < sqPerLine; j++) {
+            grid[i][j].revealed = true;
         }
     }
 }

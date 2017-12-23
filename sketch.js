@@ -169,7 +169,7 @@ function countNeighbours(i, j) {
     return neighbours;
 }
 
-function mouseClicked() {
+function mouseReleased() {
 
     var col = floor(mouseX / w);
     var row = floor(mouseY / w);

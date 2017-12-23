@@ -169,7 +169,7 @@ function countNeighbours(i, j) {
     return neighbours;
 }
 
-function mouseReleased() {
+function mousePressed() {
 
     var col = floor(mouseX / w);
     var row = floor(mouseY / w);
@@ -191,6 +191,7 @@ function mouseReleased() {
 
     if (mouseButton == CENTER) {
         // newGame();
+        console.log("THIS SHOULD HAPPEN");
         grid[col][row].flag = !grid[col][row].flag;
     }
 }

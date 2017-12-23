@@ -1,25 +1,27 @@
 var grid;
 var sqPerLine = 20;
 var mines = 60;
+var timerWidth = 120;
 var w;
 
 
 
 function setup() {
-    createCanvas(900, 900);
+    createCanvas(800 + timerWidth, 800);
 
     grid = create2DArray();
-    w = width / sqPerLine;
+    w = (width - timerWidth) / sqPerLine;
     fillGrid();
     fillMines();
     fillNeighbours();
 }
 
 function draw() {
-    background(150);
+    background(255);
 
 
     gridShow();
+    showResetButton();
     showTime();
 
 }
@@ -135,7 +137,7 @@ function countNeighbours(i, j) {
     return neighbours;
 }
 
-function mousePressed() {
+function mouseClicked() {
 
     var col = floor(mouseX / w);
     var row = floor(mouseY / w);
@@ -156,6 +158,15 @@ function mousePressed() {
         grid[col][row].flag = !grid[col][row].flag;
     }
 }
+
+// function doubleClicked() {
+//     var col = floor(mouseX / w);
+//     var row = floor(mouseY / w);
+//
+//
+//     grid[col][row].flag = !grid[col][row].flag;
+//     console.log("THIS SHOULD HAPPEN");
+// }
 
 function revealNeighbours(i, j) {
 
@@ -188,26 +199,49 @@ function gameOver() {
 
 function showTime() {
     textSize(30);
+    textAlign(LEFT);
+    strokeWeight(1);
+    stroke(0);
+    fill(0);
 
     var secFromFrames = floor(frameCount / 60);
     var sec = secFromFrames % 60;
-    var min = floor(sec / 60);
+    var min = floor(secFromFrames / 60);
 
-    if (min < 10) {
+    if (min >= 60) {
+        text("> 1 hour", width, 2 * ((width - timerWidth) / 3));
+
+    } else if (min < 10) {
         if (sec < 10) {
-            text("0" + min + " : " + "0" + sec, 400, 400);
+            text("0" + min + " : " + "0" + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
 
         } else {
-            text("0" + min + " : " + sec, 400, 400);
+            text("0" + min + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
         }
     } else {
         if (sec < 10) {
-            text(min + " : " + "0" + sec, 400, 400);
+            text(min + " : " + "0" + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
         } else {
-            text(min + " : " + sec, 400, 400);
+            text(min + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
         }
     }
 
     //text(min + " : " + sec, 400, 400);
 
+}
+
+function showResetButton() {
+
+    fill(255, 255, 0);
+    stroke(0);
+    strokeWeight(3);
+    ellipse(width - timerWidth + timerWidth / 2, height / 3, timerWidth - timerWidth * 0.3, timerWidth - timerWidth * 0.3);
+
+    stroke(0);
+    strokeWeight(timerWidth * 0.12);
+    point(width - timerWidth * 0.5 - (timerWidth - timerWidth * 0.3) / 4, height / 3 - (timerWidth - timerWidth * 0.3) * 0.12);
+    point(width - timerWidth * 0.5 + (timerWidth - timerWidth * 0.3) / 4, height / 3 - (timerWidth - timerWidth * 0.3) * 0.12);
+
+    strokeWeight(3);
+    arc(width - timerWidth + timerWidth / 2, height / 3, (timerWidth - timerWidth * 0.3) * 0.6, (timerWidth - timerWidth * 0.3) * 0.6, 0 + PI * 0.1, PI - PI * 0.1);
 }

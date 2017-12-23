@@ -1,6 +1,6 @@
 var grid;
 var sqPerLine = 20;
-var mines = 60;
+var allMines = 60;
 var timerWidth = 120;
 var w;
 
@@ -55,6 +55,7 @@ function fillGrid() {
 
 function fillMines() {
 
+    var mines = allMines;
     while (mines > 0) {
         var col = floor(random(sqPerLine));
         var row = floor(random(sqPerLine));
@@ -155,7 +156,8 @@ function mouseClicked() {
     }
 
     if (mouseButton == RIGHT) {
-        grid[col][row].flag = !grid[col][row].flag;
+        newGame();
+        //grid[col][row].flag = !grid[col][row].flag;
     }
 }
 
@@ -242,6 +244,21 @@ function showResetButton() {
     point(width - timerWidth * 0.5 - (timerWidth - timerWidth * 0.3) / 4, height / 3 - (timerWidth - timerWidth * 0.3) * 0.12);
     point(width - timerWidth * 0.5 + (timerWidth - timerWidth * 0.3) / 4, height / 3 - (timerWidth - timerWidth * 0.3) * 0.12);
 
+    //rotate(HALF_PI);
     strokeWeight(3);
+    //happy mouth
     arc(width - timerWidth + timerWidth / 2, height / 3, (timerWidth - timerWidth * 0.3) * 0.6, (timerWidth - timerWidth * 0.3) * 0.6, 0 + PI * 0.1, PI - PI * 0.1);
+
+    //sad mouth
+    arc(width - timerWidth + timerWidth / 2, height / 3 + (timerWidth - timerWidth * 0.3) * 0.35, (timerWidth - timerWidth * 0.3) * 0.6, (timerWidth - timerWidth * 0.3) * 0.6, PI + PI * 0.1, TWO_PI - PI * 0.1);
+
+}
+
+function newGame() {
+
+    fillGrid();
+    fillMines();
+    fillNeighbours();
+
+    gridShow();
 }

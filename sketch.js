@@ -6,9 +6,20 @@ var happyReset = true;
 var w;
 var d;
 
+var startMin;
+var startSec;
+
+var sec = 0;
+var mins = 0;
+
+var prevSec = 0;
+var prevMin = 0;
+
+var over = false;
 
 
 function setup() {
+
     createCanvas(800 + timerWidth, 800);
 
     grid = create2DArray();
@@ -17,22 +28,26 @@ function setup() {
     fillMines();
     fillNeighbours();
 
+    startSec = second();
+    startMin = minute();
+
 
 }
 
 function draw() {
-    background(255);
 
+    background(255);
 
     gridShow();
     showResetButton(happyReset);
-    showTime();
+
+    if (over == false) {
+        showTime();
+    } else {
+        showEndTimer();
+    }
 
     d = dist(width - timerWidth + timerWidth / 2, height / 3, mouseX, mouseY);
-    // text(d, width / 2, height / 2);
-    // line(width - timerWidth + timerWidth / 2, height / 3, mouseX, mouseY);
-
-
 }
 
 function create2DArray() {
@@ -65,6 +80,7 @@ function fillGrid() {
 function fillMines() {
 
     var mines = allMines;
+
     while (mines > 0) {
         var col = floor(random(sqPerLine));
         var row = floor(random(sqPerLine));
@@ -153,6 +169,7 @@ function mouseClicked() {
     var row = floor(mouseY / w);
 
     if (d <= (timerWidth - timerWidth * 0.3) / 2) {
+        //loop();
         newGame();
     } else if (mouseButton == LEFT) {
         if (grid[col][row].mine) {
@@ -202,47 +219,54 @@ function revealNeighbours(i, j) {
 
 function gameOver() {
 
+    over = true;
+
     for (var i = 0; i < sqPerLine; i++) {
         for (var j = 0; j < sqPerLine; j++) {
             grid[i][j].revealed = true;
         }
     }
 
-    changeHappiness();
-    //showSadResetButton();
+    happyReset = false;
 }
 
 function showTime() {
+
+    var currentSec = second();
+    var currentMin = minute();
+
+    if (currentSec != startSec && currentSec != prevSec) {
+        sec++;
+        prevSec = currentSec;
+    }
+    if (sec >= 60) {
+        sec -= 60;
+        mins++;
+    }
+
     textSize(30);
     textAlign(LEFT);
     strokeWeight(1);
     stroke(0);
     fill(0);
 
-    var secFromFrames = floor(frameCount / 60);
-    var sec = secFromFrames % 60;
-    var min = floor(secFromFrames / 60);
-
-    if (min >= 60) {
+    if (mins >= 60) {
         text("> 1 hour", width, 2 * ((width - timerWidth) / 3));
 
-    } else if (min < 10) {
+    } else if (mins < 10) {
         if (sec < 10) {
-            text("0" + min + " : " + "0" + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+            text("0" + mins + " : " + "0" + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
 
         } else {
-            text("0" + min + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+            text("0" + mins + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
         }
     } else {
         if (sec < 10) {
-            text(min + " : " + "0" + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+            text(mins + " : " + "0" + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
         } else {
-            text(min + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+            text(mins + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
         }
     }
-
-    //text(min + " : " + sec, 400, 400);
-
 }
 
 function showResetButton(happiness) {
@@ -257,7 +281,6 @@ function showResetButton(happiness) {
     point(width - timerWidth * 0.5 - (timerWidth - timerWidth * 0.3) / 4, height / 3 - (timerWidth - timerWidth * 0.3) * 0.12);
     point(width - timerWidth * 0.5 + (timerWidth - timerWidth * 0.3) / 4, height / 3 - (timerWidth - timerWidth * 0.3) * 0.12);
 
-    //rotate(HALF_PI);
     strokeWeight(3);
     if (happiness) {
         //happy mouth
@@ -276,10 +299,49 @@ function newGame() {
 
     gridShow();
 
-    changeHappiness();
+    happyReset = true;
+    over = false;
+
+    resetTimer();
 }
 
-function changeHappiness() {
+// function changeHappiness() {
+//
+//     happyReset = !happyReset;
+// }
 
-    happyReset = !happyReset;
+function resetTimer() {
+
+    startSec = second();
+    sec = 0;
+    mins = 0;
+}
+
+function showEndTimer() {
+
+    textSize(30);
+    textAlign(LEFT);
+    strokeWeight(1);
+    stroke(0);
+    fill(0);
+
+    if (mins >= 60) {
+        text("> 1 hour", width, 2 * ((width - timerWidth) / 3));
+
+    } else if (mins < 10) {
+        if (sec < 10) {
+            console.log("THIS SHOULD HAPPEN");
+
+            text("0" + mins + " : " + "0" + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+
+        } else {
+            text("0" + mins + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+        }
+    } else {
+        if (sec < 10) {
+            text(mins + " : " + "0" + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+        } else {
+            text(mins + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+        }
+    }
 }

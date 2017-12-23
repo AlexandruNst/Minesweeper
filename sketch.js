@@ -16,6 +16,7 @@ var prevSec = 0;
 var prevMin = 0;
 
 var over = false;
+var firstClick = false;
 
 
 function setup() {
@@ -41,10 +42,15 @@ function draw() {
     gridShow();
     showResetButton(happyReset);
 
-    if (over == false) {
-        showTime();
+    if (!firstClick) {
+        showDefaultTimer();
     } else {
-        showEndTimer();
+        if (over == false) {
+            showTime();
+        } else {
+            showEndTimer();
+        }
+
     }
 
     d = dist(width - timerWidth + timerWidth / 2, height / 3, mouseX, mouseY);
@@ -172,6 +178,7 @@ function mouseClicked() {
         //loop();
         newGame();
     } else if (mouseButton == LEFT) {
+        firstClick = true;
         if (grid[col][row].mine) {
             gameOver();
         } else if (!grid[col][row].flag) {
@@ -301,6 +308,7 @@ function newGame() {
 
     happyReset = true;
     over = false;
+    firstClick = false;
 
     resetTimer();
 }
@@ -344,4 +352,16 @@ function showEndTimer() {
             text(mins + " : " + sec, width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
         }
     }
+}
+
+function showDefaultTimer() {
+
+    textSize(30);
+    textAlign(LEFT);
+    strokeWeight(1);
+    stroke(0);
+    fill(0);
+
+    text("00 : 00", width - timerWidth + timerWidth / 15, 2 * ((width - timerWidth) / 3));
+
 }

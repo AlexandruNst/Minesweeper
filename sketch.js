@@ -195,14 +195,18 @@ function mouseClicked() {
     }
 }
 
-// function doubleClicked() {
-//     var col = floor(mouseX / w);
-//     var row = floor(mouseY / w);
-//
-//
-//     grid[col][row].flag = !grid[col][row].flag;
-//     console.log("THIS SHOULD HAPPEN");
-// }
+/////////////////////////////////////////////////
+
+function doubleClicked() {
+    var col = floor(mouseX / w);
+    var row = floor(mouseY / w);
+
+
+    grid[col][row].flag = !grid[col][row].flag;
+    console.log("THIS SHOULD HAPPEN");
+}
+
+////////////////////////////////////////////////
 
 function revealNeighbours(i, j) {
 

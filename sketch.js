@@ -189,7 +189,7 @@ function mouseClicked() {
         }
     }
 
-    if (mouseButton == RIGHT) {
+    if (mouseButton == CENTER) {
         // newGame();
         grid[col][row].flag = !grid[col][row].flag;
     }
